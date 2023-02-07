@@ -1,0 +1,45 @@
+### Login to Demo Project and get auth cookies
+
+// Once logging in, cookies are saved in `.idea/httpRequests/http-client.cookies`
+// You can use them to make requests to the API without logging in again.
+
+POST https://cloudflare-demo-572.pages.dev/api/user/login
+Content-Type: application/json
+
+{
+  "email": "123123123@gmail.com",
+  "password": "123123123"
+}
+
+### Get all passwords
+
+GET https://cloudflare-demo-572.pages.dev/api/password
+
+### Add a password entry
+
+POST https://cloudflare-demo-572.pages.dev/api/password/new
+Content-Type: application/json
+
+{
+  "_for": "https://sample.site",
+  "email": "sample@sample.com",
+  "description": "Sample Site",
+  "password": "password123"
+}
+
+### Get a password entry
+
+GET https://cloudflare-demo-572.pages.dev/api/password/36310692-68f2-413d-abb3-d025680c6e6b
+
+### Update a password entry
+
+POST https://cloudflare-demo-572.pages.dev/api/password/36310692-68f2-413d-abb3-d025680c6e6b
+Content-Type: application/json
+
+
+{
+  "_for": "https://sample.site.edited",
+  "email": "sample@sample.com.edited",
+  "description": "Sample Site Edited",
+  "password": "password123456"
+}
