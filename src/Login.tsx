@@ -1,6 +1,7 @@
 import {useState} from "react";
+import {Turnstile} from '@marsidev/react-turnstile'
 
-async function tryLogin(email: string, password: string): Promise<Response> {
+async function tryLogin(email: string, password: string, challenge: string): Promise<Response> {
     return fetch("/api/user/login", {
         method: "POST",
         headers: {
@@ -8,12 +9,13 @@ async function tryLogin(email: string, password: string): Promise<Response> {
         },
         body: JSON.stringify({
             email: email,
-            password: password
+            password: password,
+            challenge: challenge,
         })
     })
 }
 
-function tryRegister(email: string, password: string): Promise<Response> {
+function tryRegister(email: string, password: string, challenge: string): Promise<Response> {
     return fetch("/api/user/register", {
         method: "POST",
         headers: {
@@ -21,7 +23,8 @@ function tryRegister(email: string, password: string): Promise<Response> {
         },
         body: JSON.stringify({
             email: email,
-            password: password
+            password: password,
+            challenge: challenge,
         })
     })
 }
@@ -29,6 +32,7 @@ function tryRegister(email: string, password: string): Promise<Response> {
 function Login() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [challenge, setChallenge] = useState("");
 
     const [result, setResult] = useState<{ ok: boolean, message: string } | undefined>(undefined);
 
@@ -81,14 +85,10 @@ function Login() {
                                             </div>
                                         </div>
 
-
                                         <div className="flex items-center justify-between">
-
-                                            {/*<div className="text-sm">*/}
-                                            {/*    <a href="#"*/}
-                                            {/*       className="font-medium text-indigo-600 hover:text-indigo-500">Forgot*/}
-                                            {/*        password?</a>*/}
-                                            {/*</div>*/}
+                                            <Turnstile siteKey='0x4AAAAAAACbFAlXxghxVeWm'
+                                                       options={{theme: 'light'}}
+                                                       onSuccess={(challenge) => setChallenge(challenge)}/>
                                         </div>
 
                                         <div className="flex flex-row gap-x-5">
@@ -96,7 +96,7 @@ function Login() {
                                                     className="flex w-1/2 justify-center rounded-md border border-indigo-600 bg-white py-2 px-4 text-sm font-medium text-indigo-600 shadow-sm focus:outline-none hover:ring-2 hover:ring-offset-2"
                                                     onClick={() => {
                                                         setResult(undefined)
-                                                        tryRegister(email, password).then(
+                                                        tryRegister(email, password, challenge).then(
                                                             (response) => {
                                                                 response.text().then((text) => {
                                                                         setResult({
@@ -114,7 +114,7 @@ function Login() {
                                                     className="flex w-1/2 justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                                                     onClick={() => {
                                                         setResult(undefined)
-                                                        tryLogin(email, password).then(
+                                                        tryLogin(email, password, challenge).then(
                                                             (response) => {
                                                                 response.text().then((text) => {
                                                                         setResult({

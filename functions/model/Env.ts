@@ -3,4 +3,6 @@ export interface Env {
     KEYSTORE: KVNamespace;
     JWT_SECRET: string;
     JWT_REFRESH_SECRET: string;
+    TURNSTILE: string;
+    SITE_KEY: string;
 }

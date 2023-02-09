@@ -5,10 +5,21 @@ import CryptoJS from "crypto-js";
 import {v4 as uuidv4} from "uuid"
 import {User} from "../../model/User";
 import {Env} from "../../model/Env";
+import {verifyChallenge} from "../../util/captcha";
 
 // @ts-ignore
 export const onRequestPost: PagesFunction<Env> = async (context) => {
-    let {email, password} = await context.request.json<User>();
+    let {email, password, challenge} = await context.request.json<{
+        email: string, password: string, challenge: string
+    }>();
+
+    const ip: string = context.request.headers.get('CF-Connecting-IP')!!;
+
+    let verified = await verifyChallenge(ip, challenge, context.env.TURNSTILE);
+
+    if (!verified) {
+        return new Response("Invalid challenge.", {status: 400});
+    }
 
     if (!email || !password) {
         return new Response("Email or password is missing", {status: 400});

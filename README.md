@@ -26,6 +26,14 @@ no
 backend server that is running. It will also allow you to create dynamic sites that can be updated without having to
 redeploy the entire site.
 
+### **Cloudflare Turnstile**
+
+> Turnstile is currently in **BETA**.
+
+Turnstile is Cloudflare's CAPTCHA service that allows you to protect your site from bots and other automated attacks.
+It uses browser challenges and user interaction to verify that the user is a human and not a bot. Turnstile decreases
+the overall friction for users while still being effective at blocking bots.
+
 ### **D1 (Serverless Databases)**
 
 > This service is currently in **ALPHA**. It is not recommended to use this in production.
@@ -52,14 +60,16 @@ If you wish to deploy it yourself, you can do so by following the steps below.
 
 - [Prerequisites](#prerequisites)
 - [Setting up Cloudflare and Wrangler](#setting-up-cloudflare-and-wrangler)
+- [Creating secrets](#creating-secrets)
+- []
 - [Deploying the App](#deploying-the-app)
 - [Setting up D1](#setting-up-d1)
-  - [Via Wrangler](#via-wrangler)
-  - [Via the Cloudflare dashboard](#via-the-cloudflare-dashboard)
+    - [Via Wrangler](#via-wrangler)
+    - [Via the Cloudflare dashboard](#via-the-cloudflare-dashboard)
 - [Binding D1 to the Pages project](#binding-d1-to-the-pages-project)
 - [Setting up Workers KV](#setting-up-workers-kv)
-  - [Via Wrangler](#via-wrangler-1)
-  - [Via the Cloudflare dashboard](#via-the-cloudflare-dashboard-1)
+    - [Via Wrangler](#via-wrangler-1)
+    - [Via the Cloudflare dashboard](#via-the-cloudflare-dashboard-1)
 - [Binding Workers KV to the Pages project](#binding-workers-kv-to-the-pages-project)
 
 ## Prerequisites
@@ -86,7 +96,17 @@ If you wish to deploy it yourself, you can do so by following the steps below.
 > one command. This will also instruct you to set up your Cloudflare account and the Pages project if you haven't
 > already.
 
-This is not ready yet, as you will need to bind the following Cloudflare services to the Pages project:
+## Creating secrets
+
+> This documentation is still a work-in-progress. This section will be updated soon.
+
+## Setting up Cloudflare Turnstile
+
+> This documentation is still a work-in-progress. This section will be updated soon.
+
+## Setting up environment variables on your Pages project
+
+> This documentation is still a work-in-progress. This section will be updated soon.
 
 ## Setting up D1
 
@@ -104,7 +124,7 @@ The easiest way to set up D1 is with Wrangler CLI. You can do so by following th
 3. Once the database is created, open it and create a new table called `users`. Set it up with the following columns:
 
    | Column Name | Type        | 
-      |-------------|-------------|
+       |-------------|-------------|
    | `email`     | `TEXT`      |
    | `password`  | `TEXT`      |
    | `id`        | `TEXT`      |
