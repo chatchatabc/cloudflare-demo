@@ -14,10 +14,12 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
 
     const ip: string = context.request.headers.get('CF-Connecting-IP')!!;
 
+    if (!challenge) return new Response("CAPTCHA verification is required.", {status: 400});
+
     let verified = await verifyChallenge(ip, challenge, context.env.TURNSTILE);
 
     if (!verified) {
-        return new Response("Invalid challenge.", {status: 400});
+        return new Response("CAPTCHA returned an error. Please try again.", {status: 400});
     }
 
 
