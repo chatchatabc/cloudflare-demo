@@ -1,5 +1,5 @@
-import {useState} from "react";
-import {Turnstile} from '@marsidev/react-turnstile'
+import {useRef, useState} from "react";
+import {Turnstile, TurnstileInstance} from '@marsidev/react-turnstile'
 
 async function tryLogin(email: string, password: string, challenge: string): Promise<Response> {
     return fetch("/api/user/login", {
@@ -33,6 +33,8 @@ function Login() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [challenge, setChallenge] = useState("");
+
+    const captcha = useRef<TurnstileInstance>(null);
 
     const [result, setResult] = useState<{ ok: boolean, message: string } | undefined>(undefined);
 
@@ -85,10 +87,12 @@ function Login() {
                                             </div>
                                         </div>
 
-                                        <div className="flex items-center justify-between">
-                                            <Turnstile siteKey='0x4AAAAAAACbFAlXxghxVeWm'
-                                                       options={{theme: 'light'}}
-                                                       onSuccess={(challenge) => setChallenge(challenge)}/>
+                                        <div className="flex items-center justify-center rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 bg-white">
+                                            <Turnstile
+                                                ref={captcha}
+                                                siteKey='0x4AAAAAAACbFAlXxghxVeWm'
+                                                options={{theme: 'light'}}
+                                                onSuccess={(challenge) => setChallenge(challenge)}/>
                                         </div>
 
                                         <div className="flex flex-row gap-x-5">
@@ -103,6 +107,7 @@ function Login() {
                                                                             ok: response.ok,
                                                                             message: text
                                                                         });
+                                                                        captcha.current?.reset();
                                                                     }
                                                                 )
                                                             }
@@ -117,13 +122,17 @@ function Login() {
                                                         tryLogin(email, password, challenge).then(
                                                             (response) => {
                                                                 response.text().then((text) => {
-                                                                        setResult({
-                                                                            ok: response.ok,
-                                                                            message: text
-                                                                        });
+                                                                        if (response.ok) {
+                                                                            window.location.href = "/"
+                                                                        } else {
+                                                                            setResult({
+                                                                                ok: response.ok,
+                                                                                message: text
+                                                                            });
+                                                                            captcha.current?.reset();
+                                                                        }
                                                                     }
                                                                 )
-                                                                window.location.href = "/"
                                                             }
                                                         )
                                                     }}>
@@ -134,16 +143,16 @@ function Login() {
                                 </div>
                             </div>
                         </div>
-                        <div className="relative hidden w-0 flex-1 lg:block">
-                            <img className="absolute inset-0 h-full w-full object-cover"
-                                 src="https://images.unsplash.com/photo-1505904267569-f02eaeb45a4c?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1908&q=80"
-                                 alt=""/>
-                        </div>
+                        {/*<div className="relative hidden w-0 flex-1 lg:block">*/}
+                        {/*    <img className="absolute inset-0 h-full w-full object-cover"*/}
+                        {/*         src="https://pub-8484d88b1ff94656ad0403e32d5731c8.r2.dev/bg.jpg"*/}
+                        {/*         alt=""/>*/}
+                        {/*</div>*/}
                     </div>
                 </div>
             </div>
             <div className="w-full h-full xs:hidden sm:visible absolute -z-40 bg-cover" style={{
-                background: 'url("https://images.unsplash.com/photo-1604076913837-52ab5629fba9?ixlib=rb-4.0.3&dl=mymind-tZCrFpSNiIQ-unsplash.jpg&w=1920&q=80&fm=jpg&crop=entropy&cs=tinysrgb")',
+                background: 'url("https://pub-8484d88b1ff94656ad0403e32d5731c8.r2.dev/bg.jpg")',
                 backgroundSize: 'cover',
             }}>
             </div>
