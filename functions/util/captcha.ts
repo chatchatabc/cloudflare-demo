@@ -3,17 +3,21 @@ import {fa} from "timeago.js/lib/lang";
 
 export async function verifyChallenge(ip: string, challenge: string, secret: string): Promise<boolean> {
     const url = 'https://challenges.cloudflare.com/turnstile/v0/siteverify';
+
     const result = await fetch(url, {
         body: JSON.stringify({
             secret: secret,
             response: challenge,
             remoteip: ip,
         }),
+        headers: {
+            'Content-Type': 'application/json'
+        },
         method: 'POST',
     });
 
     const outcome: {
-        success: string,
+        success: boolean,
         challenge_ts: string,
         hostname: string,
         "error-codes": String[],
@@ -21,5 +25,5 @@ export async function verifyChallenge(ip: string, challenge: string, secret: str
         cdata: string,
     } = await result.json();
 
-    return outcome.success == "true";
+    return outcome.success === true;
 }
