@@ -10,6 +10,8 @@ const header = {
 };
 
 export async function verifyToken(id: string, token: string, secret: string): Promise<string | undefined> {
+    if (!token) return undefined;
+
     const [encodedHeader, encodedPayload, encodedSignature] = token.split(".");
 
     const key = await crypto.subtle.importKey(
